@@ -1,7 +1,17 @@
 import Image from 'next/image';
 import { formatDate } from '@/lib/format';
-import { togglePostLikeStatus } from '@/lib/serverActions/posts';
 import LikeButton from '@/components/like-icon';
+
+const imageLoader = (config) => {
+  const { src } = config;
+  const urlStart = src.split('/upload')[0];
+  const urlEnd = src.split('/upload')[1];
+  const transformations = `w_200,q_${config.quality}`;
+
+  const transformedUrl = [urlStart, '/upload/', transformations, urlEnd].join('');
+
+  return transformedUrl;
+};
 
 const Post = ({ post, action }) => {
   const { title, image, content, userFirstName, createdAt, isLiked, id } = { ...post };
@@ -9,7 +19,7 @@ const Post = ({ post, action }) => {
   return (
     <article className="post">
       <div className="post-image">
-        <Image src={image} alt={title} width={500} height={500} />
+        <Image loader={imageLoader} src={image} alt={title} fill quality={50} />
       </div>
       <div className="post-content">
         <header>
